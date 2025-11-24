@@ -8,6 +8,9 @@
 
 
 class Student:
+    high_scholarship: int = 6000
+    regular_scholarship: int = 4000
+
     def __init__(self, full_name: str, age: int, group_number: str, average_score: float):
         if average_score < 0 or average_score > 5:
             raise ValueError("Средний балл должен быть в диапазоне 0–5")
@@ -22,26 +25,41 @@ class Student:
 
     def get_scholarship_amount(self) -> int:
         if self.average_score == 5:
-            return 6000
+            return self.high_scholarship
         elif self.average_score < 5:
-            return 4000
+            return self.regular_scholarship
         return 0
 
-    def compare_with(self, other) -> str:
+    def __lt__(self, other):
         if not isinstance(other, Student):
-            raise TypeError('Можно сравнивать только со студентом или аспирантом')
+            raise TypeError("Можно сравнивать только со студентом или аспирантом")
+        return self.get_scholarship_amount() < other.get_scholarship_amount()
 
-        self_amount = self.get_scholarship_amount()
-        other_amount = other.get_scholarship_amount()
+    def __gt__(self, other):
+        if not isinstance(other, Student):
+            raise TypeError("Можно сравнивать только со студентом или аспирантом")
+        return self.get_scholarship_amount() > other.get_scholarship_amount()
 
-        if self_amount > other_amount:
-            return 'Стипендия больше'
-        elif self_amount < other_amount:
-            return 'Стипендия меньше'
-        return 'Стипендии равны'
+    def __eq__(self, other):
+        if not isinstance(other, Student):
+            return False
+        return self.get_scholarship_amount() == other.get_scholarship_amount()
+
+    def __le__(self, other):
+        if not isinstance(other, Student):
+            raise TypeError("Можно сравнивать только со студентом или аспирантом")
+        return self.get_scholarship_amount() <= other.get_scholarship_amount()
+
+    def __ge__(self, other):
+        if not isinstance(other, Student):
+            raise TypeError("Можно сравнивать только со студентом или аспирантом")
+        return self.get_scholarship_amount() >= other.get_scholarship_amount()
 
 
 class GraduateStudent(Student):
+    high_scholarship: int = 8000
+    regular_scholarship: int = 6000
+
     def __init__(self, full_name: str, age: int, group_number: str, average_score: float, academic_work_name: str):
         super().__init__(full_name, age, group_number, average_score)
         self.academic_work_name = academic_work_name
@@ -52,9 +70,9 @@ class GraduateStudent(Student):
 
     def get_scholarship_amount(self) -> int:
         if self.average_score == 5:
-            return 8000
+            return self.high_scholarship
         elif self.average_score < 5:
-            return 6000
+            return self.regular_scholarship
         return 0
 
 
@@ -62,7 +80,7 @@ if __name__ == '__main__':
     maks = Student('Максим Максимович', 20, '5132704/30801', 5.0)
     pavel = Student('Павел Павлович', 24, '5132704/30802', 3.89)
     roman = GraduateStudent('Роман Романович', 25, '5132704/30803', 4.21, 'Моделирование ИИ')
-    ilay = GraduateStudent('Илья Ильич', 27, '5132704/30804', 5.0, 'ИИ в энергосистемах')
+    ilya = GraduateStudent('Илья Ильич', 27, '5132704/30804', 5.0, 'ИИ в энергосистемах')
 
     print(maks.get_info())
     print(roman.get_info())
@@ -70,6 +88,5 @@ if __name__ == '__main__':
     print(f"{maks.full_name}: {maks.get_scholarship_amount()} руб.")
     print(f"{roman.full_name}: {roman.get_scholarship_amount()} руб.")
 
-    print(f"{maks.full_name} vs {roman.full_name} → {maks.compare_with(roman)}")
-    print(f"{roman.full_name} vs {ilay.full_name} → {roman.compare_with(ilay)}")
-
+    print(f"{maks.full_name} vs {roman.full_name} → {maks == roman}")
+    print(f"{roman.full_name} vs {ilya.full_name} → {roman > ilya}")

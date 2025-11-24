@@ -23,4 +23,4 @@ if __name__ == '__main__':
     print("Не начинаются с 'a':", not_start_with_a)
 
     length_gte_5 = filter_strings(lambda s: len(s) >= 5, strings)
-    print("Длина ≥ 5-task:", length_gte_5)
+    print("Длина ≥ 5:", length_gte_5)

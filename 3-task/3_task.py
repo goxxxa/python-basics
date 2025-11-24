@@ -24,29 +24,30 @@ class Shape(ABC):
 
     def get_perimeter(self) -> float:
         if self._perimeter is None:
-            self._calculate_perimetr()
+            self._calculate_perimeter()
         return self._perimeter
 
-    def compare_area_with(self, other: Shape) -> str:
-        if self._area > other._area:
-            return 'Больше'
-        elif self._area < other._area:
-            return 'Меньше'
-        return 'Площади равны'
+    def __lt__(self, other: Shape):
+        return self.get_area() < other.get_area()
 
-    def compare_perimeter_with(self, other: Shape) -> str:
-        if self._perimeter > other._perimeter:
-            return 'Больше'
-        elif self._perimeter < other._perimeter:
-            return 'Меньше'
-        return 'Периметры равны'
+    def __gt__(self, other: Shape):
+        return self.get_area() > other.get_area()
+
+    def __eq__(self, other: Shape):
+        return self.get_area() == other.get_area()
+
+    def __le__(self, other):
+        return self.get_area() <= other.get_area()
+
+    def __ge__(self, other):
+        return self.get_area() >= other.get_area()
 
     @abstractmethod
     def _calculate_area(self) -> None:
         raise NotImplementedError()
 
     @abstractmethod
-    def _calculate_perimetr(self) -> None:
+    def _calculate_perimeter(self) -> None:
         raise NotImplementedError()
 
 
@@ -58,7 +59,7 @@ class Square(Shape):
             raise ValueError('Сторона квадрата должна быть положительной')
         self.length = length
 
-    def _calculate_perimetr(self) -> None:
+    def _calculate_perimeter(self) -> None:
         self._perimeter = 4 * self.length
 
     def _calculate_area(self) -> None:
@@ -74,7 +75,7 @@ class Rectangle(Shape):
         self.length = width
         self.height = height
 
-    def _calculate_perimetr(self) -> None:
+    def _calculate_perimeter(self) -> None:
         self._perimeter = 2 * self.length + 2 * self.height
 
     def _calculate_area(self) -> None:
@@ -89,7 +90,7 @@ class Circle(Shape):
             raise ValueError('Радиус должен быть положительным')
         self.radius = radius
 
-    def _calculate_perimetr(self) -> None:
+    def _calculate_perimeter(self) -> None:
         self._perimeter = 2 * pi * self.radius
 
     def _calculate_area(self) -> None:
@@ -107,7 +108,7 @@ class Triangle(Shape):
             raise ValueError('Сторона треугольника должна быть положительной')
         self.length = length
 
-    def _calculate_perimetr(self) -> None:
+    def _calculate_perimeter(self) -> None:
         self._perimeter = 3 * self.length
 
     def _calculate_area(self) -> None:
@@ -133,9 +134,9 @@ if __name__ == '__main__':
     print(f'Периметр треугольника: {triangle.get_perimeter()}')
 
     print('Сравнение площадей:')
-    print(f'Прямоугольник vs Квадрат → {rectangle.compare_area_with(square)}')
-    print(f'Квадрат vs Круг → {square.compare_area_with(circle)}')
+    print(f'Прямоугольник vs Квадрат → {rectangle > square}')
+    print(f'Квадрат vs Круг → {square <= circle}')
 
     print('Сравнение периметров:')
-    print(f'Треугольник vs Квадрат → {triangle.compare_perimeter_with(square)}')
-    print(f'Круг vs Прямоугольник → {circle.compare_perimeter_with(rectangle)}')
+    print(f'Треугольник vs Квадрат → {triangle == square}')
+    print(f'Круг vs Прямоугольник → {circle <= rectangle}')

@@ -4,7 +4,8 @@
 
 
 def is_palindrome(input_word: str) -> str:
-    if len(input_word) < 2: raise ValueError('Слово должно быть длиной не менее 2 символов')
+    if len(input_word) < 2:
+        raise ValueError('Слово должно быть длиной не менее 2 символов')
     return 'Палиндром' if input_word == input_word[::-1] else 'Не палиндром'
 
 
